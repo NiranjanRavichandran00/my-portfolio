@@ -99,7 +99,7 @@ const Terminal = () => {
 
     return (
         <div>
-            <div className="bg-black text-green-500 font-mono p-4 rounded-lg w-full max-w-2xl h-96 overflow-y-auto">
+            <div className="bg-black text-green-500 font-mono p-4 rounded-lg w-full min-w-[100vh] max-w-6xl min-h-[70vh] overflow-y-auto">
                 <div>
                     {output.map((line, index) => (
                         <p key={index}>{line}</p>
