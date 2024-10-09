@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const TYPING_SPEED = 25; // Speed of typing animation (ms)
+const TYPING_SPEED = 10; // Speed of typing animation (ms)
 const LINE_DELAY = 25; // Delay between lines (ms)
 
 const Terminal = () => {
+    const terminalRef = useRef<HTMLDivElement>(null); 
     const [input, setInput] = useState('');
     const [output, setOutput] = useState<string[]>([]);
-    const [isCommandRunning, setIsCommandRunning] = useState(false); // New state
+    const [isCommandRunning, setIsCommandRunning] = useState(false); 
+    const [lineHeight, setLineHeight] = useState(0); 
 
     const commands: Record<string, string> = {
         help: `
@@ -41,20 +43,66 @@ const Terminal = () => {
         `,
     };
 
-    const handleCommand = (command: string) => {
-        if (isCommandRunning) return; // Prevent submitting new command if one is running
+    // Measure line height after the component mounts
+    useEffect(() => {
+        if (terminalRef.current) {
+            const tempElement = document.createElement('div');
+            tempElement.style.fontFamily = 'monospace';
+            tempElement.style.visibility = 'hidden'; 
+            tempElement.innerHTML = 'M';
+            terminalRef.current.appendChild(tempElement); 
+            setLineHeight(tempElement.clientHeight); 
+            terminalRef.current.removeChild(tempElement); 
+        }
+    }, []);
 
-        const commandOutput = commands[command] ? commands[command].trim().split('\n') : ['Command not found. Type "help" for a list of commands.'];
-        addOutput(`> ${command}`);
-        setIsCommandRunning(true); // Disable input during command execution
-        animateLines(commandOutput);
-        setInput(''); // Clear input after execution
+    // Calculate if the terminal will overflow with the new command's output
+    const willOutputOverflow = (newLines: string[]) => {
+        const terminalHeight = terminalRef.current?.clientHeight ?? 0;
+        if (lineHeight === 0) return false; 
+        const totalLines = output.length + newLines.length + 6; 
+        return totalLines * lineHeight > terminalHeight;
     };
 
+    /**
+     * Handles the command logic by executing the given command string.
+     * If a command is already running, it prevents further execution.
+     * It checks if the terminal will overflow and handles command output animation.
+     *
+     * @param {string} command - The command to be executed.
+     */
+    const handleCommand = (command: string) => {
+        if (isCommandRunning) return; 
+
+        const commandOutput = commands[command] ? commands[command].trim().split('\n') : ['Command not found. Type "help" for a list of commands.'];
+
+        // Check if the terminal will overflow with the new output
+        if (willOutputOverflow(commandOutput)) {
+            setOutput([]);
+        }
+
+        addOutput(`> ${command}`); 
+        setIsCommandRunning(true); 
+        animateLines(commandOutput); 
+        setInput(''); 
+    };
+
+    /**
+     * Adds the given text to the terminal output.
+     *
+     * @param {string} text - The text to add to the output.
+     */
     const addOutput = (text: string) => {
         setOutput(prev => [...prev, text]);
     };
 
+    /**
+     * Animates the typing of the given text, calling the callback
+     * once the animation is complete.
+     *
+     * @param {string} text - The text to animate.
+     * @param {function} callback - The callback to execute after the animation.
+     */
     const animateText = (text: string, callback: () => void) => {
         let currentIndex = 0;
         const fullText = text + "\n";
@@ -74,6 +122,12 @@ const Terminal = () => {
         }, TYPING_SPEED);
     };
 
+    /**
+     * Animates the typing of each line in the provided array of lines.
+     * It manages the timing and handles empty lines accordingly.
+     *
+     * @param {string[]} lines - The lines to animate.
+     */
     const animateLines = (lines: string[]) => {
         let lineIndex = 0;
 
@@ -98,6 +152,12 @@ const Terminal = () => {
         typeNextLine();
     };
 
+    /**
+     * Handles the click event of a command button, executing the command
+     * if no other command is currently running.
+     *
+     * @param {string} command - The command to execute.
+     */
     const handleCommandClick = (command: string) => {
         if (isCommandRunning) return; // Prevent command clicks if a command is running
         handleCommand(command); // Execute the command directly when button is clicked
@@ -105,7 +165,10 @@ const Terminal = () => {
 
     return (
         <div>
-            <div className="bg-black text-green-500 font-mono p-4 rounded-lg w-full min-w-[100vh] max-w-6xl min-h-[70vh] overflow-y-auto">
+            <div
+                ref={terminalRef} // Attach the terminal ref
+                className="bg-black text-green-500 font-mono p-4 rounded-lg w-full min-w-[100vh] max-w-6xl min-h-[70vh] h-[70vh] overflow-hidden"
+            >
                 <div>
                     {output.map((line, index) => (
                         <p key={index}>{line}</p>
