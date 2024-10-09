@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { useState } from 'react';
 
@@ -8,6 +8,7 @@ const LINE_DELAY = 25; // Delay between lines (ms)
 const Terminal = () => {
     const [input, setInput] = useState('');
     const [output, setOutput] = useState<string[]>([]);
+    const [isCommandRunning, setIsCommandRunning] = useState(false); // New state
 
     const commands: Record<string, string> = {
         help: `
@@ -40,12 +41,14 @@ const Terminal = () => {
         `,
     };
 
-    const handleCommand = (e: React.FormEvent) => {
-        e.preventDefault();
-        const commandOutput = commands[input] ? commands[input].trim().split('\n') : ['Command not found. Type "help" for a list of commands.'];
-        addOutput(`> ${input}`);
+    const handleCommand = (command: string) => {
+        if (isCommandRunning) return; // Prevent submitting new command if one is running
+
+        const commandOutput = commands[command] ? commands[command].trim().split('\n') : ['Command not found. Type "help" for a list of commands.'];
+        addOutput(`> ${command}`);
+        setIsCommandRunning(true); // Disable input during command execution
         animateLines(commandOutput);
-        setInput('');
+        setInput(''); // Clear input after execution
     };
 
     const addOutput = (text: string) => {
@@ -87,6 +90,8 @@ const Terminal = () => {
                     lineIndex++;
                     setTimeout(typeNextLine, LINE_DELAY);
                 }
+            } else {
+                setIsCommandRunning(false); // Re-enable input once animation completes
             }
         };
 
@@ -94,7 +99,8 @@ const Terminal = () => {
     };
 
     const handleCommandClick = (command: string) => {
-        setInput(command);
+        if (isCommandRunning) return; // Prevent command clicks if a command is running
+        handleCommand(command); // Execute the command directly when button is clicked
     };
 
     return (
@@ -106,7 +112,7 @@ const Terminal = () => {
                     ))}
                 </div>
 
-                <form onSubmit={handleCommand}>
+                <form onSubmit={(e) => { e.preventDefault(); handleCommand(input); }}>
                     <div className="flex">
                         <span className="mr-2">{'>'}</span>
                         <input
@@ -115,19 +121,21 @@ const Terminal = () => {
                             onChange={(e) => setInput(e.target.value)}
                             className="bg-black text-green-500 outline-none flex-grow"
                             autoFocus
+                            disabled={isCommandRunning} // Disable input if a command is running
                         />
                     </div>
                 </form>
             </div>
 
             <div className="mt-4 p-2">
-                <p className="text-white">Click a command to autofill:</p>
+                <p className="text-white">Click a command to execute:</p>
                 <div className="flex flex-wrap">
                     {Object.keys(commands).map((command) => (
                         <button
                             key={command}
                             onClick={() => handleCommandClick(command)}
-                            className="bg-green-600 text-black rounded p-2 m-2 hover:bg-green-500 transition-colors"
+                            className={`bg-green-600 text-black rounded p-2 m-2 hover:bg-green-500 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isCommandRunning} // Disable buttons if a command is running
                         >
                             {command}
                         </button>
