@@ -217,32 +217,41 @@ const Terminal = () => {
                         education
                     </button>
 
-                    <button
-                        onClick={toggleWorkSubCommands}
-                        className={`bg-green-600 text-black rounded p-2 m-2 hover:bg-green-500 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        disabled={isCommandRunning}
-                    >
-                        work
-                    </button>
+                    <div className="flex items-center space-x-1">
+                        <button
+                            onClick={toggleWorkSubCommands}
+                            className={`bg-green-600 text-black rounded-l p-2 hover:bg-green-500 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isCommandRunning}
+                        >
+                            work
+                        </button>
 
-                    {showWorkSubCommands && (
-                        <div className="flex flex-wrap ml-4">
-                            <button
-                                onClick={() => handleCommandClick('work 1')}
-                                className={`bg-green-500 text-black rounded p-2 m-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                disabled={isCommandRunning}
-                            >
-                                work 1
-                            </button>
-                            <button
-                                onClick={() => handleCommandClick('work 2')}
-                                className={`bg-green-500 text-black rounded p-2 m-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                disabled={isCommandRunning}
-                            >
-                                work 2
-                            </button>
-                        </div>
-                    )}
+                        {showWorkSubCommands && (
+                            <div className="bg-green-600 rounded-r-lg flex">
+                                <button
+                                    onClick={() => handleCommandClick('work')}
+                                    className={`bg-green-500 text-black p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={isCommandRunning}
+                                >
+                                    work
+                                </button>
+                                <button
+                                    onClick={() => handleCommandClick('work 1')}
+                                    className={`bg-green-500 text-black p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={isCommandRunning}
+                                >
+                                    work 1
+                                </button>
+                                <button
+                                    onClick={() => handleCommandClick('work 2')}
+                                    className={`bg-green-500 text-black rounded-r p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={isCommandRunning}
+                                >
+                                    work 2
+                                </button>
+                            </div>
+                        )}
+                    </div>
 
                     <button
                         onClick={() => handleCommandClick('certifications')}
