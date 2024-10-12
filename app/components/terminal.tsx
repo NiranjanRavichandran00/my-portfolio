@@ -18,7 +18,9 @@ const Terminal = () => {
             - help: List all commands
             - projects: List my projects
             - education: Show my education history
-            - work: Show previous work experience
+            - work: List previous work experience
+            - work 1: Show details of Software Engineer at E-MetroTel
+            - work 2: Show details of Software Developer Intern at E-MetroTel
             - certifications: Show certifications
         `,
         projects: `
@@ -34,14 +36,30 @@ const Terminal = () => {
         `,
         work: `
             Work Experience:
-            - Software Engineer at E-MetroTel (2022-2023)
-            - Software Developer Intern at E-MetroTel (2022)
+            1. Software Engineer at E-MetroTel (2022-2023)
+            2. Software Developer Intern at E-MetroTel (2022)
+            Type 'work 1' or 'work 2' for details.
+        `,
+        'work 1': `
+            Software Engineer at E-MetroTel (2022-2023):
+            - Developed and optimized a video conferencing application, resolving resource management issues.
+            - Led feature development and code reviews for 10+ features per sprint.
+            - Worked with Docker and Linux for containerization and deployment.
+            - Collaborated with global teams to resolve server stability issues.
+        `,
+        'work 2': `
+            Software Developer Intern at E-MetroTel (2022):
+            - Worked on full-stack development for business communication software.
+            - Implemented new features for customer management systems.
+            - Gained experience in Java, Python, and web development.
+            - Developed RPM packages for Linux deployment.
         `,
         certifications: `
             Certifications:
             - AWS Certified Cloud Practitioner (2024)
         `,
     };
+    
 
     // Measure line height after the component mounts
     useEffect(() => {
