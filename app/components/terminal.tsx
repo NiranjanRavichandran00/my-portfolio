@@ -167,7 +167,7 @@ const Terminal = () => {
         <div>
             <div
                 ref={terminalRef}
-                className="bg-black text-green-500 font-mono p-4 rounded-lg w-full min-w-[100vh] max-w-6xl min-h-[70vh] h-[70vh] overflow-y-auto"
+                className="bg-black text-green-500 font-mono p-4 rounded-lg w-full min-w-[100vh] max-w-[100vh] min-h-[70vh] h-[70vh] overflow-y-auto break-words whitespace-pre-wrap"
             >
                 <div>
                     {output.map((line, index) => (
