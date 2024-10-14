@@ -217,17 +217,20 @@ const Terminal = () => {
                         education
                     </button>
 
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-2 flex-wrap">
                         <button
                             onClick={toggleWorkSubCommands}
-                            className={`bg-green-600 text-black rounded-l p-2 hover:bg-green-500 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`bg-green-600 text-black rounded-l-lg p-2 hover:bg-green-500 transition-colors flex items-center ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={isCommandRunning}
                         >
                             work
+                            <span className={`ml-2 transform transition-transform ${showWorkSubCommands ? 'rotate-0' : 'rotate-180'}`}>
+                                &#9654;
+                            </span>
                         </button>
 
                         {showWorkSubCommands && (
-                            <div className="bg-green-600 rounded-r-lg flex">
+                            <div className="bg-green-600 rounded-r-lg flex space-x-2">
                                 <button
                                     onClick={() => handleCommandClick('work')}
                                     className={`bg-green-500 text-black p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -244,7 +247,7 @@ const Terminal = () => {
                                 </button>
                                 <button
                                     onClick={() => handleCommandClick('work 2')}
-                                    className={`bg-green-500 text-black rounded-r p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`bg-green-500 text-black rounded-r-lg p-2 hover:bg-green-400 transition-colors ${isCommandRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     disabled={isCommandRunning}
                                 >
                                     work 2
@@ -252,6 +255,7 @@ const Terminal = () => {
                             </div>
                         )}
                     </div>
+
 
                     <button
                         onClick={() => handleCommandClick('certifications')}
